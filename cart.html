@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Cart</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{margin:0;background:#000;color:#fff;font-family:Poppins}
+h1{text-align:center}
+.item{
+  display:flex;justify-content:space-between;
+  padding:15px;border-bottom:1px solid #333
+}
+button{
+  background:gold;border:none;
+  padding:8px 15px;border-radius:20px;
+}
+.total{text-align:center;font-size:20px;color:gold;margin:20px}
+</style>
+</head>
+
+<body>
+
+<h1>🛒 ตะกร้าสินค้า</h1>
+<div id="list"></div>
+<div class="total" id="total"></div>
+
+<div style="text-align:center">
+  <button onclick="pay()">ชำระเงิน</button>
+</div>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")||"[]");
+let total=0;
+let list=document.getElementById("list");
+
+cart.forEach((p,i)=>{
+  total+=Number(p.price);
+  list.innerHTML+=`
+  <div class="item">
+    ${p.name} - ${p.price} ฿
+    <button onclick="remove(${i})">ลบ</button>
+  </div>`;
+});
+total.innerText=`รวมทั้งหมด ${total} ฿`;
+
+function remove(i){
+  cart.splice(i,1);
+  localStorage.setItem("cart",JSON.stringify(cart));
+  location.reload();
+}
+function pay(){
+  location.href="product.html";
+}
+</script>
+
+</body>
+</html>

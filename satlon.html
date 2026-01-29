@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Product</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{
+  margin:0;
+  background:#000;
+  color:#fff;
+  font-family:Poppins;
+  text-align:center;
+}
+img{
+  width:90%;
+  max-width:420px;
+  margin-top:30px;
+  border-radius:20px;
+  box-shadow:0 0 40px rgba(255,215,0,.4);
+}
+.price{color:gold;font-size:20px}
+button{
+  margin:10px;
+  padding:14px 26px;
+  border:none;
+  border-radius:30px;
+  font-size:16px;
+  cursor:pointer;
+}
+.line{background:#06c755;color:#fff}
+.pay{background:gold;color:#000;font-weight:bold}
+.back{background:#333;color:#fff}
+#smoke{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+}
+
+</style>
+</head>
+
+<body>
+<canvas id="smoke"></canvas>
+<h2 id="name"></h2>
+<div class="price" id="price"></div>
+<img id="img">
+
+<div>
+  <button class="line" onclick="line()">แชท LINE</button>
+  <button class="pay" onclick="pay()">ชำระเงิน</button>
+
+<button onclick="(cart.html)">เพิ่มลงตะกร้า</button>
+
+</div>
+<div id="paybox" style="display:none">
+  <p>สแกน QR เพื่อชำระเงิน</p>
+  <img src="qr.jpeg" style="width:220px;border-radius:12px">
+  <p style="color:gold">โอนแล้วกด “ยืนยันการโอน”</p>
+  <button onclick="confirmPay()">ยืนยันการโอน</button>
+</div>
+
+<button class="back" onclick="history.back()">← กลับ</button>
+<h3>อัปโหลดสลิป</h3>
+<form action="https://docs.google.com/forms/d/e/FORM_ID/formResponse"
+ method="POST" enctype="multipart/form-data" target="_blank">
+
+<input type="file" name="entry.333333" required>
+<br><br>
+<button type="submit">ส่งสลิป</button>
+</form>
+
+
+<script>
+name.innerText=localStorage.getItem("p_name");
+price.innerText=localStorage.getItem("p_price")+" ฿";
+img.src=localStorage.getItem("p_img");
+
+function line(){
+  location.href="https://line.me/R/ti/p/@YOURID";
+}
+function pay(){
+  alert("3360646096 กรุงไทย (โอนเงินแล้วส่งสลิปทาง LINE)");
+}
+function pay(){
+  document.getElementById("paybox").style.display="block";
+}
+
+function confirmPay(){
+  saveOrder();
+  alert("บันทึกออเดอร์เรียบร้อย ส่งสลิปทาง LINE");
+  line();
+}
+function saveOrder(){
+  let url = "https://docs.google.com/forms/d/e/FORM_ID/formResponse";
+  let data = new FormData();
+  data.append("entry.111111", localStorage.getItem("p_name"));
+  data.append("entry.222222", localStorage.getItem("p_price"));
+  fetch(url,{method:"POST",mode:"no-cors",body:data});
+}
+function addCart(){
+  let cart = JSON.parse(localStorage.getItem("cart")||"[]");
+  cart.push({
+    name:localStorage.getItem("p_name"),
+    price:localStorage.getItem("p_price")
+  });
+  localStorage.setItem("cart",JSON.stringify(cart));
+  alert("เพิ่มลงตะกร้าแล้ว");
+}
+const c=document.getElementById("smoke");
+const ctx=c.getContext("2d");
+resize();
+window.onresize=resize;
+
+let p=[];
+for(let i=0;i<120;i++)
+  p.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*40+10});
+
+function resize(){
+  c.width=innerWidth;
+  c.height=innerHeight;
+}
+
+function draw(){
+  ctx.clearRect(0,0,c.width,c.height);
+  p.forEach(s=>{
+    ctx.beginPath();
+    ctx.fillStyle="rgba(255,255,255,.03)";
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fill();
+    s.y-=0.3;
+    if(s.y<0)s.y=c.height;
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+</script>
+
+</body>
+</html>
